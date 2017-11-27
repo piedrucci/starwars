@@ -16,7 +16,8 @@ class ListData extends Component {
 		super(props)
 		this.state = {
 			data: props.AppInfo.peopleData || [],
-			rows: null
+			rows: null,
+			loading: true
 		}
 		this.loadPeople = this.loadPeople.bind(this)
 		this.proccessInfo = this.proccessInfo.bind(this)
@@ -24,11 +25,13 @@ class ListData extends Component {
 	}
 
 	componentDidMount() {
+		console.log('sssssss')
 		this.loadPeople()
 	}
 
 
 	loadPeople = async() => {
+		await this.setState({loading:true})
 		const response = await utils.getData()
 		const jsonData = await response.json()
 
@@ -92,7 +95,7 @@ class ListData extends Component {
 				</tr>
 			} )
 		}
-		await this.setState({rows: rows})
+		await this.setState({rows: rows, loading:false})
 	}
 
 	prepareProfile = async(profile) => {
@@ -100,50 +103,14 @@ class ListData extends Component {
 		// console.log(this.props.AppInfo.peopleInfo)
 	}
 
-	render( { AppInfo } = this.props ){
-		// const { peopleData } = AppInfo
-
-		// let rows = null
-		// if ( peopleData.length>0 ){
-		// 	rows = 
-		// 	peopleData.map( (row, index) => {
-
-		// 		let genderImage = null
-
-		// 		if (row.gender.toLowerCase() === 'male'){ genderImage = male }
-		// 		if (row.gender.toLowerCase() === 'female'){ genderImage = female }
-		// 		if (row.gender.toLowerCase() === 'n/a'){ genderImage = na }
-
-		// 		// const ert = this.sdd(row.species[0])
-		// 		// const responseEspecies = utils.getSpecies(row.species[0])
-		// 		// const species = responseEspecies.json()
-		// 		// console.log(species.name)
-		// 		// console.log(ert)
-				
-
-		// 		return <tr key={index}>
-		// 	      	<td><Link to="/people/1" style={{fontWeight: 'bold'}}>{row.name}</Link></td>
-		// 	      	<td>{row.height}</td>
-		// 	      	<td>{row.mass}</td>
-		// 	      	<td>{row.hair_color}</td>
-		// 	      	<td>{row.skin_color}</td>
-		// 	      	<td>{row.eye_color}</td>
-		// 	      	<td>{row.birth_year}</td>
-		// 	      	<td><img src={genderImage} alt="gender" style={{width:24, height:24}}/></td>
-		// 	      	{/*<td>{ww.name}</td>*/}
-		// 	    </tr>
-		// 	} )
-			 	
-		// }
-
+	render(){
 		return (
 			<div>
-				People List 
-
 				{
-					this.props.AppInfo.peopleData.length > 0 ?
+					(!this.state.loading)?
 					<div>
-					<table className="table table-hover table-striped table-sm">
+					<h4>Characters List</h4>
+					<table className="table table-hover table-striped table-sm" style={{backgroundColor: 'white'}}>
 						<thead>
 							<tr>
 								<th scope="col">Name</th>

@@ -2,60 +2,57 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { utils } from './utils'
+import male from './images/male.png'
+import female from './images/female.png'
+import na from './images/questionMark.png'
+
+const labelStyle = {fontWeight: 'bold'}
 
 class Profile extends Component {
     constructor(props){
         super(props)
         this.state = {
-            films: null
+            films: null,
+            vehicles: null,
+            starships: null,
         }
     }
 
     componentDidMount() {
-        console.log('didMount')
         this.process()
     }
     process = async() => {
-        const f = this.props.AppInfo.peopleInfo.films || []
+        const films     = this.props.AppInfo.peopleInfo.films || []
+        const vehicles  = this.props.AppInfo.peopleInfo.vehicles || []
+        const starships = this.props.AppInfo.peopleInfo.starships || []
 
-        const peopleFilms = Promise.all( f.map( async(film,index) => {
-            const resfilms = await utils.getFilms(film)
-            const jsonFilms = await resfilms.json()
-            return jsonFilms.title
+        await this.lazyLoad(films, 'films', 'title')
+        await this.lazyLoad(vehicles, 'vehicles')
+        await this.lazyLoad(starships, 'starships')
+    }
+
+    lazyLoad = async(arrayData, type, field='name') => {
+        // console.log(`${type}, ${field}`)
+        const vector = Promise.all( arrayData.map( async(row,index) => {
+            const response = await utils.dataAdapter(row)
+            const jsonData = await response.json()
+            return jsonData[field]
             } )
         )
-        peopleFilms.then( async(values) => {
-            // console.log(values)
-            await this.setState({films: values})
-
+        vector.then( async(values) => {
+            if (type==='films'){await this.setState({films: values})}
+            if (type==='vehicles'){await this.setState({vehicles: values})}
+            if (type==='starships'){await this.setState({starships: values})}
         } )
     }
 
     render({AppInfo} = this.props) {
         let {peopleInfo} = AppInfo
         const profileLoaded = !(Object.keys(peopleInfo).length === 0 && peopleInfo.constructor === Object)
-        // console.log(this.props.match.params.idProfile)
-
-        console.log(`validProfile: ${profileLoaded}`)
-        const peopleFilms = (profileLoaded) ? peopleInfo.films : []
-
-        let promiseFilms = Promise.all( peopleFilms.map( async(film, index) => {
-            const responseFilm = await utils.getFilms(film)
-            const jsonFilm = await responseFilm.json()
-            return jsonFilm.title
-        } )
-        )
-
         
-        // let films = []
-        // films = promiseFilms.then( values => {
-        //     films=values.map( (e, i) => {
-        //         return e
-        //     } )
-        //     console.log(films)
-        //     return films
-        // } )
-
+        let genderImage = male
+        if ( peopleInfo.gender==='female' ) genderImage = female
+        if ( peopleInfo.gender==='n/a' ) genderImage = na
 
         return (
 
@@ -65,20 +62,26 @@ class Profile extends Component {
                 <div>
                 
                 <div className="p-2">
-                <div className="card" style={{width: 250}} >
-                    <div className="card-body">
-                        <h4 className="card-title">{peopleInfo.name}</h4>
+                    <div className="card" style={{width: 250}} >
+                        <div className="card-body">
+                            <h4 className="card-title">{peopleInfo.name}</h4>
+                        </div>
+                        <ul className="list-group list-group-flush">
+                            <li className="list-group-item"><span style={labelStyle}>Height:</span> {peopleInfo.height}</li>
+                            <li className="list-group-item"><span style={labelStyle}>Mass:</span> {peopleInfo.mass}</li>
+                            <li className="list-group-item"><span style={labelStyle}>Hair Color:</span> {peopleInfo.hair_color}</li>
+                            <li className="list-group-item"><span style={labelStyle}>Skin Color:</span> {peopleInfo.skin_color}</li>
+                            <li className="list-group-item"><span style={labelStyle}>Eye Color:</span> {peopleInfo.eye_color}</li>
+                            <li className="list-group-item"><span style={labelStyle}>Birth Year:</span> {peopleInfo.birth_year}</li>
+                            <li className="list-group-item">
+                                <span style={labelStyle}>Gender:</span> {peopleInfo.gender}
+                                &nbsp;&nbsp;<img src={genderImage} alt="." style={{width:24, height:24}}/>
+                            </li>
+                        </ul>
+                        <div className="card-body">
+                            <Link to="/" className="btn btn-primary">Go back to list! &nbsp; &nbsp;<i className="fa fa-th-list" aria-hidden="true"></i></Link>
+                        </div>
                     </div>
-                    <ul className="list-group list-group-flush">
-                        <li className="list-group-item">Height: {peopleInfo.height}</li>
-                        <li className="list-group-item">Dapibus ac facilisis in</li>
-                        <li className="list-group-item">Vestibulum at eros</li>
-                    </ul>
-                    <div className="card-body">
-                        
-                        <Link to="/">Go to list!</Link>
-                    </div>
-                </div>
                 </div>
 
                 <div className="p-2">
@@ -95,9 +98,13 @@ class Profile extends Component {
                     <div id="collapseOne" className="collapse show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
                         <div className="card-body">
                             <ul className="list-group">
-                            <li className="list-group-item">{(this.state.films!==null)?this.state.films[0]:null}</li>
-                            
-                            
+                            {
+                                this.state.films !==null?
+                                this.state.films.map((film,index)=>{
+                                    return <li key={index} className="list-group-item">{film}</li>
+                                })
+                                :null
+                            }
                             </ul> 
                         </div>
                     </div>
@@ -106,13 +113,21 @@ class Profile extends Component {
                     <div className="card-header" role="tab" id="headingTwo">
                         <h5 className="mb-0">
                         <a className="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Collapsible Group Item #2
+                            Vehicles
                         </a>
                         </h5>
                     </div>
                     <div id="collapseTwo" className="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
                         <div className="card-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                            <ul className="list-group">
+                            {
+                                this.state.vehicles !==null?
+                                this.state.vehicles.map((vehicle,index)=>{
+                                    return <li key={index} className="list-group-item">{vehicle}</li>
+                                })
+                                :null
+                            }
+                            </ul> 
                         </div>
                     </div>
                     </div>
@@ -120,13 +135,22 @@ class Profile extends Component {
                     <div className="card-header" role="tab" id="headingThree">
                         <h5 className="mb-0">
                         <a className="collapsed" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                            Collapsible Group Item #3
+                            Starships
                         </a>
                         </h5>
                     </div>
+                    
                     <div id="collapseThree" className="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
                         <div className="card-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                            <ul className="list-group">
+                            {
+                                this.state.starships !==null?
+                                this.state.starships.map((starship,index)=>{
+                                    return <li key={index} className="list-group-item">{starship}</li>
+                                })
+                                :null
+                            }
+                            </ul> 
                         </div>
                     </div>
                     </div>
@@ -135,7 +159,7 @@ class Profile extends Component {
                 </div>
                 : <div className="alert alert-danger" role="alert">
                 sorry! you must select a character in the list <br />
-                <Link to="/" className="btn btn-danger">Go to list! <i className="fa fa-th-list" aria-hidden="true"></i>
+                <Link to="/" className="btn btn-danger">Go to list! &nbsp; &nbsp;<i className="fa fa-th-list" aria-hidden="true"></i>
                 </Link>
               </div> }
             </div>

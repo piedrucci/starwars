@@ -16,7 +16,7 @@ export const utils = {
 	},
 
 
-	getFilms(endPoint) {
+	dataAdapter(endPoint) {
 	    const response = fetch(endPoint)
 	    return response
 	},
