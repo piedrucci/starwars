@@ -56,13 +56,13 @@ class Profile extends Component {
 
         return (
 
-            <div className="d-flex flex-row flex-wrap">
+            <div>
             {
                 profileLoaded ?
-                <div>
+                <div className="d-flex flex-row flex-wrap">
                 
                 <div className="p-2">
-                    <div className="card" style={{width: 250}} >
+                    <div className="card"  >
                         <div className="card-body">
                             <h4 className="card-title">{peopleInfo.name}</h4>
                         </div>
@@ -84,16 +84,14 @@ class Profile extends Component {
                     </div>
                 </div>
 
-                <div className="p-2">
+                <div className="p-2" >
                     <div id="accordion" role="tablist">
                     <div className="card">
-                    <div className="card-header" role="tab" id="headingOne">
-                        <h5 className="mb-0">
-                        <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            Films
-                        </a>
-                        </h5>
-                    </div>
+                        <div className="card-header" role="tab" id="headingOne">
+                            <h5 className="mb-0">
+                            <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Films</a>
+                            </h5>
+                        </div>
                 
                     <div id="collapseOne" className="collapse show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
                         <div className="card-body">
@@ -156,6 +154,7 @@ class Profile extends Component {
                     </div>
                 </div>
                 </div>
+
                 </div>
                 : <div className="alert alert-danger" role="alert">
                 sorry! you must select a character in the list <br />

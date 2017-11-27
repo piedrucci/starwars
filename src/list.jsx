@@ -17,7 +17,8 @@ class ListData extends Component {
 		this.state = {
 			data: props.AppInfo.peopleData || [],
 			rows: null,
-			loading: true
+			loading: true,
+			
 		}
 		this.loadPeople = this.loadPeople.bind(this)
 		this.proccessInfo = this.proccessInfo.bind(this)
@@ -25,7 +26,6 @@ class ListData extends Component {
 	}
 
 	componentDidMount() {
-		console.log('sssssss')
 		this.loadPeople()
 	}
 
@@ -37,17 +37,14 @@ class ListData extends Component {
 
 		await this.props.fillPeople(jsonData.results)
 		this.proccessInfo()
-		// await this.setState({data: jsonData.results})
 	}
 
 	sort = async(column) => {
 		await this.setState({order: (this.state.order==='asc')? 'desc':'asc'})
-		// const arrObj = ( this.state.order === 'desc' )? _.sortBy(this.state.data, column, this.state.order).reverse() : _.sortBy(this.state.data, column, this.state.order)
 		const arrObj = ( this.state.order === 'desc' ) 
 			? _.sortBy(this.props.AppInfo.peopleData, column, this.state.order).reverse()
 			: _.sortBy(this.props.AppInfo.peopleData, column, this.state.order)
 
-		// console.log(arrObj)
 		await this.props.fillPeople(arrObj)
 		this.proccessInfo()
 	}
