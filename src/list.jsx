@@ -17,8 +17,8 @@ class ListData extends Component {
 		this.state = {
 			data: props.AppInfo.peopleData || [],
 			rows: null,
-			loading: true,
-			
+			loading: false,
+			characters: []
 		}
 		this.loadPeople = this.loadPeople.bind(this)
 		this.proccessInfo = this.proccessInfo.bind(this)
@@ -29,14 +29,45 @@ class ListData extends Component {
 		this.loadPeople()
 	}
 
-
 	loadPeople = async() => {
-		await this.setState({loading:true})
-		const response = await utils.getData()
-		const jsonData = await response.json()
 
-		await this.props.fillPeople(jsonData.results)
-		this.proccessInfo()
+		if ( this.props.AppInfo.peopleData.length === 0 ){
+			await this.setState({loading:true})
+			const response = await utils.getData()
+			const jsonData = await response.json()
+
+			// para cargar el nombre de la especie
+			const db = jsonData.results
+			let db2 = Promise.all( db.map(async(character, index)=>{
+				let newInfo = {
+					url: character.url,
+					name: character.name,
+					height: character.height,
+					mass: character.mass,
+					hair_color: character.hair_color,
+					skin_color: character.skin_color,
+					eye_color: character.eye_color,
+					birth_year: character.birth_year,
+					gender: character.gender,
+					specie: await this.getSpecieName(character.species[0]),
+					films: character.films,
+					vehicles: character.vehicles,
+					starships: character.starships
+				}
+				return newInfo
+				})
+			)
+			db2.then( values => {
+				this.setState({characters: values})
+				this.props.fillPeople(values)
+				this.proccessInfo()
+			} )
+
+			// await this.props.fillPeople(jsonData.results)
+			// this.proccessInfo()
+		}else{
+			await this.setState({rows: this.props.AppInfo.characters})
+		}
 	}
 
 	sort = async(column) => {
@@ -49,11 +80,10 @@ class ListData extends Component {
 		this.proccessInfo()
 	}
 
-	sdd = async(path) => {
+	getSpecieName = async(path) => {
 		const responseEspecies = await utils.getSpecies(path)
 		const species = await responseEspecies.json()
-		// console.log(species)
-		return species
+		return species.name
 	}
 
 	proccessInfo = async() => {
@@ -69,12 +99,6 @@ class ListData extends Component {
 				if (row.gender.toLowerCase() === 'female'){ genderImage = female }
 				if (row.gender.toLowerCase() === 'n/a'){ genderImage = na }
 
-				// const ert = this.sdd(row.species[0])
-				// const responseEspecies = utils.getSpecies(row.species[0])
-				// const species = responseEspecies.json()
-				// console.log(species.name)
-				// console.log(ert)
-
 				const arrUrl = row.url.split('/')
 				const profileId = arrUrl[5]
 				
@@ -88,16 +112,16 @@ class ListData extends Component {
 						<td>{row.eye_color}</td>
 						<td>{row.birth_year}</td>
 						<td><img src={genderImage} alt="gender" style={{width:24, height:24}}/></td>
-						{/*<td>{ww.name}</td>*/}
+						<td>{row.specie}</td>
 				</tr>
 			} )
 		}
 		await this.setState({rows: rows, loading:false})
+		await this.props.fillRows(rows)
 	}
 
 	prepareProfile = async(profile) => {
 		await this.props.fillProfile(profile)
-		// console.log(this.props.AppInfo.peopleInfo)
 	}
 
 	render(){
@@ -117,8 +141,8 @@ class ListData extends Component {
 								<th scope="col">Skin Color</th>
 								<th scope="col">Eye Color</th>
 								<th scope="col">Birth Year</th>
-								<th scope="col" style={{cursor: 'pointer'}} onClick={this.sort.bind(this, 'height')}>Gender</th>
-								<th scope="col">Species</th>
+								<th scope="col">Gender</th>
+								<th scope="col" style={{cursor: 'pointer'}} onClick={this.sort.bind(this, 'specie')}>Specie</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -162,6 +186,7 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		fillPeople: data => dispatch(appActions.fillPeople(data)),
 		fillProfile: data => dispatch(appActions.fillProfile(data)),
+		fillRows: data => dispatch(appActions.fillRows(data)),
 	}
 }
   

@@ -3,7 +3,8 @@ import * as appActions from './actions'
 
 const initialState = {
     peopleData: [],
-    peopleInfo: {}
+    peopleInfo: {},
+    characters: []
 }
 
 const appReducer = ( state = initialState, action ) => {
@@ -15,6 +16,10 @@ const appReducer = ( state = initialState, action ) => {
 
       case appActions.FILL_PEOPLE:
          return {...state, peopleData: action.payload}
+
+        
+      case appActions.FILL_ROWS:
+        return {...state, characters: action.payload}
 
        default:
           return state;

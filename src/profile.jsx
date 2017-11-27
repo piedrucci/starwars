@@ -61,11 +61,12 @@ class Profile extends Component {
                 profileLoaded ?
                 <div className="d-flex flex-row flex-wrap">
                 
-                <div className="p-2">
+                <div className="p-2" style={{width: 300}} >
                     <div className="card"  >
-                        <div className="card-body">
-                            <h4 className="card-title">{peopleInfo.name}</h4>
+                        <div className="card-header">
+                            <h4 >{peopleInfo.name}</h4>
                         </div>
+                        <div className="card-body">
                         <ul className="list-group list-group-flush">
                             <li className="list-group-item"><span style={labelStyle}>Height:</span> {peopleInfo.height}</li>
                             <li className="list-group-item"><span style={labelStyle}>Mass:</span> {peopleInfo.mass}</li>
@@ -78,13 +79,15 @@ class Profile extends Component {
                                 &nbsp;&nbsp;<img src={genderImage} alt="." style={{width:24, height:24}}/>
                             </li>
                         </ul>
-                        <div className="card-body">
-                            <Link to="/" className="btn btn-primary">Go back to list! &nbsp; &nbsp;<i className="fa fa-th-list" aria-hidden="true"></i></Link>
+
+                        <br />
+                        <p className="text-center"><Link to="/" className="btn btn-primary center-text">Go back to list! &nbsp; &nbsp;<i className="fa fa-th-list" aria-hidden="true"></i></Link></p>
+                            
                         </div>
                     </div>
                 </div>
 
-                <div className="p-2" >
+                <div className="p-2" style={{width: 350}} >
                     <div id="accordion" role="tablist">
                     <div className="card">
                         <div className="card-header" role="tab" id="headingOne">
@@ -156,11 +159,12 @@ class Profile extends Component {
                 </div>
 
                 </div>
-                : <div className="alert alert-danger" role="alert">
-                sorry! you must select a character in the list <br />
-                <Link to="/" className="btn btn-danger">Go to list! &nbsp; &nbsp;<i className="fa fa-th-list" aria-hidden="true"></i>
-                </Link>
-              </div> }
+                : 
+                <div className="alert alert-danger" role="alert">
+                    sorry! you must select a character in the list <br />
+                    <Link to="/" className="btn btn-danger">Go to list! &nbsp; &nbsp;<i className="fa fa-th-list" aria-hidden="true"></i></Link>
+                </div> 
+            }
             </div>
         )
     }
