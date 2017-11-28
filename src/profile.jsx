@@ -5,6 +5,7 @@ import { utils } from './utils'
 import male from './images/male.png'
 import female from './images/female.png'
 import na from './images/questionMark.png'
+import Modal from './modal'
 
 const labelStyle = {fontWeight: 'bold'}
 
@@ -61,6 +62,7 @@ class Profile extends Component {
                 profileLoaded ?
                 <div className="d-flex flex-row flex-wrap">
                 
+
                 <div className="p-2" style={{width: 300}} >
                     <div className="card"  >
                         <div className="card-header">
@@ -93,7 +95,7 @@ class Profile extends Component {
                         <div className="card-header" role="tab" id="headingOne">
                             <h5 className="mb-0">
                             <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            Films &nbsp;{this.state.films!==null?<span class="badge badge-primary">{this.state.films.length}</span>:null}
+                            Films &nbsp;{this.state.films!==null?<span className="badge badge-primary">{this.state.films.length}</span>:null}
                             </a>
                             </h5>
                         </div>
@@ -105,7 +107,8 @@ class Profile extends Component {
                             this.state.films !==null?
                             this.state.films.map((film,index)=>{
                                 // return <li key={index} className="list-group-item">{film}</li>
-                                return <button type="button" key={index} className="list-group-item list-group-item-action">{film}</button>
+                                return <button type="button" key={index} className="list-group-item list-group-item-action"
+                                >{film}</button>
                             })
                             :null
                         }
@@ -119,7 +122,7 @@ class Profile extends Component {
                     <div className="card-header" role="tab" id="headingTwo">
                         <h5 className="mb-0">
                         <a className="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Vehicles &nbsp;{this.state.vehicles!==null?<span class="badge badge-primary">{this.state.vehicles.length}</span>:null}
+                            Vehicles &nbsp;{this.state.vehicles!==null?<span className="badge badge-primary">{this.state.vehicles.length}</span>:null}
                         </a>
                         </h5>
                     </div>
@@ -144,7 +147,7 @@ class Profile extends Component {
                     <div className="card-header" role="tab" id="headingThree">
                         <h5 className="mb-0">
                         <a className="collapsed" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                            Starships &nbsp;{this.state.starships!==null?<span class="badge badge-primary">{this.state.starships.length}</span>:null}
+                            Starships &nbsp;{this.state.starships!==null?<span className="badge badge-primary">{this.state.starships.length}</span>:null}
                         </a>
                         </h5>
                     </div>

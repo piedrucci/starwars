@@ -4,7 +4,14 @@ import * as appActions from './actions'
 const initialState = {
     peopleData: [],
     peopleInfo: {},
-    characters: []
+    characters: [],
+    pagination: {
+        count: 0,
+        pages: 1,
+        current: 1,
+        next: 2,
+        previous: null,
+    }
 }
 
 const appReducer = ( state = initialState, action ) => {
@@ -17,9 +24,12 @@ const appReducer = ( state = initialState, action ) => {
       case appActions.FILL_PEOPLE:
          return {...state, peopleData: action.payload}
 
-        
       case appActions.FILL_ROWS:
         return {...state, characters: action.payload}
+
+    
+    case appActions.SET_PAGINATION:
+        return {...state, pagination: action.payload}
 
        default:
           return state;

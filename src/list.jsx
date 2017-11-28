@@ -18,11 +18,13 @@ class ListData extends Component {
 			data: props.AppInfo.peopleData || [],
 			rows: null,
 			loading: false,
-			characters: []
+			characters: [],
+			pageButtons: []
 		}
 		this.loadPeople = this.loadPeople.bind(this)
 		this.proccessInfo = this.proccessInfo.bind(this)
 		this.prepareProfile = this.prepareProfile.bind(this)
+		this.loadPageResults = this.loadPageResults.bind(this)
 	}
 
 	componentDidMount() {
@@ -35,6 +37,24 @@ class ListData extends Component {
 			await this.setState({loading:true})
 			const response = await utils.getData()
 			const jsonData = await response.json()
+
+			// ======================================================= P A G I N A T I O N 
+			let pagination = this.props.AppInfo.pagination
+			pagination.count = jsonData.count
+
+			const totalPages = Math.ceil(jsonData.count/10)
+			const arrSplit = jsonData.next.split('/')
+			const arrSplit2= arrSplit[5].split('=')
+			pagination.pages = totalPages
+			pagination.next = arrSplit2[1]
+			let pButtons = []
+			for (var i = 0; i < pagination.pages; i++) {
+				console.log(i)
+				pButtons.push(<li key={i} className="page-item">
+				<a className="page-link" role="button" onClick={()=>this.loadPageResults()}>{i+1}</a></li>)
+			} 
+			await this.setState({pageButtons: pButtons})
+			//  =============================================================================
 
 			// para cargar el nombre de la especie
 			const db = jsonData.results
@@ -68,6 +88,12 @@ class ListData extends Component {
 		}else{
 			await this.setState({rows: this.props.AppInfo.characters})
 		}
+	}
+
+	loadPageResults = async(page) => {
+		// const response = await utils.getData(page)
+		// const jsonData = await response.json()
+		console.log(page)
 	}
 
 	sort = async(column) => {
@@ -150,19 +176,7 @@ class ListData extends Component {
 						</tbody>
 					</table>
 
-					<nav aria-label="Page navigation example">
-						<ul className="pagination justify-content-end" style={{cursor:'pointer'}}>
-							<li className="page-item disabled">
-								<a className="page-link" role="button" tabIndex="-1" >Previous</a>
-							</li>
-							<li className="page-item"><a className="page-link" role="button">1</a></li>
-							<li className="page-item"><a className="page-link" role="button">2</a></li>
-							<li className="page-item"><a className="page-link" role="button">3</a></li>
-							<li className="page-item">
-								<a className="page-link" role="button" >Next</a>
-							</li>
-						</ul>
-					</nav>
+					
 
 					</div>
 					:<Spinner name="ball-pulse-sync" color="blue" fadeIn='none' />
@@ -187,6 +201,7 @@ const mapDispatchToProps = (dispatch) => {
 		fillPeople: data => dispatch(appActions.fillPeople(data)),
 		fillProfile: data => dispatch(appActions.fillProfile(data)),
 		fillRows: data => dispatch(appActions.fillRows(data)),
+		setPagination: data => dispatch(appActions.setPagination(data)),
 	}
 }
   
