@@ -92,69 +92,77 @@ class Profile extends Component {
                     <div className="card">
                         <div className="card-header" role="tab" id="headingOne">
                             <h5 className="mb-0">
-                            <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Films</a>
+                            <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Films &nbsp;{this.state.films!==null?<span class="badge badge-primary">{this.state.films.length}</span>:null}
+                            </a>
                             </h5>
                         </div>
                 
                     <div id="collapseOne" className="collapse show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-                        <div className="card-body">
-                            <ul className="list-group">
-                            {
-                                this.state.films !==null?
-                                this.state.films.map((film,index)=>{
-                                    return <li key={index} className="list-group-item">{film}</li>
-                                })
-                                :null
-                            }
-                            </ul> 
-                        </div>
+                    
+                        <div className="list-group">
+                        {
+                            this.state.films !==null?
+                            this.state.films.map((film,index)=>{
+                                // return <li key={index} className="list-group-item">{film}</li>
+                                return <button type="button" key={index} className="list-group-item list-group-item-action">{film}</button>
+                            })
+                            :null
+                        }
+                        </div> 
                     </div>
                     </div>
+
+                    {this.state.vehicles !== null?
+                        this.state.vehicles.length>0?
                     <div className="card">
                     <div className="card-header" role="tab" id="headingTwo">
                         <h5 className="mb-0">
                         <a className="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Vehicles
+                            Vehicles &nbsp;{this.state.vehicles!==null?<span class="badge badge-primary">{this.state.vehicles.length}</span>:null}
                         </a>
                         </h5>
                     </div>
                     <div id="collapseTwo" className="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
-                        <div className="card-body">
-                            <ul className="list-group">
-                            {
-                                this.state.vehicles !==null?
-                                this.state.vehicles.map((vehicle,index)=>{
-                                    return <li key={index} className="list-group-item">{vehicle}</li>
-                                })
-                                :null
-                            }
-                            </ul> 
-                        </div>
+                        
+                        <ul className="list-group">
+                        {
+                            this.state.vehicles !==null?
+                            this.state.vehicles.map((vehicle,index)=>{
+                                return <li key={index} className="list-group-item">{vehicle}</li>
+                            })
+                            :null
+                        }
+                        </ul> 
                     </div>
                     </div>
+                    :null:null}
+
+                    {this.state.starships !== null?
+                    this.state.starships.length>0?
                     <div className="card">
                     <div className="card-header" role="tab" id="headingThree">
                         <h5 className="mb-0">
                         <a className="collapsed" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                            Starships
+                            Starships &nbsp;{this.state.starships!==null?<span class="badge badge-primary">{this.state.starships.length}</span>:null}
                         </a>
                         </h5>
                     </div>
-                    
                     <div id="collapseThree" className="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
-                        <div className="card-body">
-                            <ul className="list-group">
-                            {
-                                this.state.starships !==null?
-                                this.state.starships.map((starship,index)=>{
-                                    return <li key={index} className="list-group-item">{starship}</li>
-                                })
-                                :null
-                            }
-                            </ul> 
-                        </div>
+                        
+                        <ul className="list-group">
+                        {
+                            this.state.starships !==null?
+                            this.state.starships.map((starship,index)=>{
+                                return <li key={index} className="list-group-item">{starship}</li>
+                            })
+                            :null
+                        }
+                        </ul> 
                     </div>
                     </div>
+                    :null:null}
+
                 </div>
                 </div>
 

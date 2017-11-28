@@ -9,7 +9,7 @@ const store = configureStore();
 
 const App = () => (
   <Provider store={store}>
-    <div className="jumbotron">
+    <div className="container">
       <Header />
       <Container />
     </div>
