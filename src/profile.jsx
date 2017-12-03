@@ -22,22 +22,23 @@ class Profile extends Component {
     componentDidMount() {
         this.process()
     }
+
     process = async() => {
         const films     = this.props.AppInfo.peopleInfo.films || []
         const vehicles  = this.props.AppInfo.peopleInfo.vehicles || []
         const starships = this.props.AppInfo.peopleInfo.starships || []
 
-        await this.lazyLoad(films, 'films', 'title')
+        await this.lazyLoad(films, 'films')
         await this.lazyLoad(vehicles, 'vehicles')
         await this.lazyLoad(starships, 'starships')
     }
 
-    lazyLoad = async(arrayData, type, field='name') => {
-        // console.log(`${type}, ${field}`)
+    lazyLoad = async(arrayData, type) => {
         const vector = Promise.all( arrayData.map( async(row,index) => {
             const response = await utils.dataAdapter(row)
             const jsonData = await response.json()
-            return jsonData[field]
+            // return jsonData[field]
+            return jsonData
             } )
         )
         vector.then( async(values) => {
@@ -45,6 +46,10 @@ class Profile extends Component {
             if (type==='vehicles'){await this.setState({vehicles: values})}
             if (type==='starships'){await this.setState({starships: values})}
         } )
+    }
+
+    fillModalInfo = async(type = 'films', info)=>{
+        await this.setState({type: type, modalData: info})
     }
 
     render({AppInfo} = this.props) {
@@ -64,6 +69,7 @@ class Profile extends Component {
                 
 
                 <div className="p-2" style={{width: 300}} >
+                <Modal data={this.state.modalData} type={this.state.type} />
                     <div className="card"  >
                         <div className="card-header">
                             <h4 >{peopleInfo.name}</h4>
@@ -106,9 +112,11 @@ class Profile extends Component {
                         {
                             this.state.films !==null?
                             this.state.films.map((film,index)=>{
-                                // return <li key={index} className="list-group-item">{film}</li>
-                                return <button type="button" key={index} className="list-group-item list-group-item-action"
-                                >{film}</button>
+                                return <button type="button" key={index} 
+                                className="list-group-item list-group-item-action"
+                                data-toggle="modal" data-target="#exampleModal"
+                                onClick={()=>this.fillModalInfo('films', film)}
+                                >{film.title}</button>
                             })
                             :null
                         }
@@ -132,7 +140,11 @@ class Profile extends Component {
                         {
                             this.state.vehicles !==null?
                             this.state.vehicles.map((vehicle,index)=>{
-                                return <li key={index} className="list-group-item">{vehicle}</li>
+                                return <button type="button"
+                                key={index} 
+                                className="list-group-item list-group-item-action"
+                                data-toggle="modal" data-target="#exampleModal"
+                                onClick={()=>this.fillModalInfo('vehicles', vehicle)}>{vehicle.name}</button>
                             })
                             :null
                         }
@@ -157,7 +169,10 @@ class Profile extends Component {
                         {
                             this.state.starships !==null?
                             this.state.starships.map((starship,index)=>{
-                                return <li key={index} className="list-group-item">{starship}</li>
+                                return <button type="button" key={index} 
+                                className="list-group-item list-group-item-action"
+                                data-toggle="modal" data-target="#exampleModal"
+                                onClick={()=>this.fillModalInfo('starships', starship)}>{starship.name}</button>
                             })
                             :null
                         }

@@ -49,7 +49,6 @@ class ListData extends Component {
 			pagination.next = arrSplit2[1]
 			let pButtons = []
 			for (var i = 0; i < pagination.pages; i++) {
-				console.log(i)
 				pButtons.push(<li key={i} className="page-item">
 				<a className="page-link" role="button" onClick={()=>this.loadPageResults()}>{i+1}</a></li>)
 			} 
