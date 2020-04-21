@@ -116,12 +116,13 @@ class ListData extends Component {
   };
 
   getSpecieName = async (path) => {
-    if (typeof path === "undefined") {
-      return null;
-    }
-    const responseEspecies = await utils.getSpecies(path);
-    const species = await responseEspecies.json();
-    return species.name;
+    // if (typeof path === "undefined") {
+    //   return null;
+    // }
+    // const responseEspecies = await utils.getSpecies(path);
+    // const species = await responseEspecies.json();
+    // return species.name;
+    return null;
   };
 
   proccessInfo = async () => {
