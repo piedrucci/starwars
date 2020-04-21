@@ -1,7 +1,7 @@
 
 export const utils = {
 	getData(page=1) {
-	    const response = fetch( 'https://swapi.co/api/people/?page=' + page)
+	    const response = fetch( 'https://swapi.dev/api/people/?page=' + page)
 	    return response
 	},
 
@@ -11,7 +11,7 @@ export const utils = {
 	},
 
 	getPeople(idPeople) {
-	    const response = fetch('https://swapi.co/api/people/'+idPeople)
+	    const response = fetch('https://swapi.dev/api/people/'+idPeople)
 	    return response
 	},
 
