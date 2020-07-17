@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "jquery": "^3.5.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "react": "*",
     "react-dom": "*",
     "react-redux": "*",
